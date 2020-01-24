@@ -94,10 +94,10 @@ const Game = () => {
     player === "X" ? setPlayer("O") : setPlayer("X");
   }
 
-  const updateGameState = squares => {
+  const updateGameState = (squares: Squares) => {
     const winner = calculateWinner(squares);
     winner ?
-      setStatus(`And the winner is ${winner}!!`) :
+      setStatus(`And the winner is ${winner}!`) :
       togglePlayer();
   }
 
