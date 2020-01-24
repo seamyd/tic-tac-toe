@@ -39,6 +39,7 @@ const Square = (props: SquareProps) => (
 
 type BoardProps = {
   player: string,
+  gameFinished: boolean,
   updateGameState: Function
 }
 
@@ -50,6 +51,7 @@ const Board = (props: BoardProps) => {
       <Square
         value={squares[pos]} 
         click={() => {
+          if (squares[pos] || props.gameFinished) return;
           const updatedSquares = [
             ...squares.slice(0, pos),
             props.player,
@@ -88,7 +90,7 @@ const Board = (props: BoardProps) => {
 
 const Game = () => {
   const [player, setPlayer] = useState<string>("X");
-  const [status, setStatus] = useState<string>("");
+  const [gameFinished, setGameFinished] = useState<boolean>(false);
 
   const togglePlayer = () => {
     player === "X" ? setPlayer("O") : setPlayer("X");
@@ -96,18 +98,22 @@ const Game = () => {
 
   const updateGameState = (squares: Squares) => {
     const winner = calculateWinner(squares);
-    winner ?
-      setStatus(`And the winner is ${winner}!`) :
-      togglePlayer();
+    winner ? setGameFinished(true) : togglePlayer();
   }
 
   return (
     <div className="game">
       <div className="game-board">
-        <Board player={player} updateGameState={updateGameState} />
+        <Board 
+          player={player}
+          gameFinished={gameFinished}
+          updateGameState={updateGameState}
+        />
       </div>
       <div className="game-info">
-        <div>{status}</div>
+        {gameFinished &&
+          <div>{`And the winner is ${player}!`}</div>
+        }
       </div>
     </div>
   );
